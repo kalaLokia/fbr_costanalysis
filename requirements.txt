@@ -1,0 +1,5 @@
+pandas==1.2.5
+openpyxl==3.0.7
+XlsxWriter==1.4.3
+pyinstaller==4.3
+auto-py-to-exe==2.9.0
