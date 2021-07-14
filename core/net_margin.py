@@ -1,12 +1,9 @@
 """
-Calculation of Net Margin of an article.
-
-Made by kalaLokia and Tony
-Github: https://github.com/kalalokia/python
+Calculation of net margin, cost of production, etc.
 """
 
-from article import Article
 import math
+from .article import Article
 
 
 def calculateNetMargin(df, mrps: list, material_costs: list):

@@ -6,20 +6,16 @@ from frames.general_frames import (
     ButtonGeneralFrame,
     InfoGeneralFrame,
 )
-from article import Article
-from bom import Bom
-from excel_report import ExcelReporting
-from net_margin import calculateNetMarginSingle
+from core.article import Article
+from core.bom import Bom
+from core.excel_report import ExcelReporting
+from core.net_margin import calculateNetMarginSingle
 
 
 class TabGeneral(Frame):
-    def __init__(
-        self, container, bom_db, items_db, article_db, *args, **kwargs
-    ) -> None:
-        super().__init__(container, *args, **kwargs)
-        self.bom_db = bom_db
-        self.items_db = items_db
-        self.article_db = article_db
+    def __init__(self, container, app) -> None:
+        super().__init__(container)
+        self.app = app
 
         self.log_msg = StringVar(self)
         self.var_brand = StringVar(self)
@@ -47,7 +43,7 @@ class TabGeneral(Frame):
 
     @property
     def is_db(self):
-        if self.bom_db.empty and self.items_db.empty:
+        if self.app.bom_db.empty and self.app.items_db.empty:
             return False
         else:
             return True
@@ -85,14 +81,14 @@ class TabGeneral(Frame):
         article.category = self.var_category.get()
 
         bom = Bom(article=article)
-        response = bom.createFinalBom(self.bom_db, self.items_db)
+        response = bom.createFinalBom(self.app.bom_db, self.app.items_db)
         print(f"Response: {response}")
         if response["status"] == "OK":
             article = bom.article
-            if not self.article_db.empty:
-                if article.article_code in self.article_db.article.values:
-                    rates = self.article_db[
-                        self.article_db.article == article.article_code
+            if not self.app.article_db.empty:
+                if article.article_code in self.app.article_db.article.values:
+                    rates = self.app.article_db[
+                        self.app.article_db.article == article.article_code
                     ].values[0]
                     article.stitch_rate = float(rates[1])
                     article.print_rate = float(rates[2])
@@ -119,7 +115,7 @@ class TabGeneral(Frame):
             return
 
         self.hide_info_frame()
-        if self.article_db.empty:
+        if self.app.article_db.empty:
             self.log_msg.set("I didn't find file articles.csv in dir data.")
             print("Can't calculate netmargin, rates file missing.")
             return
@@ -133,13 +129,13 @@ class TabGeneral(Frame):
         )
         article.category = self.var_category.get()
         bom = Bom(article=article)
-        response = bom.createFinalBom(self.bom_db, self.items_db)
+        response = bom.createFinalBom(self.app.bom_db, self.app.items_db)
         print(f"Response: {response}")
         if response["status"] == "OK":
             article = bom.article
-            if article.article_code in self.article_db.article.values:
-                rates = self.article_db[
-                    self.article_db.article == article.article_code
+            if article.article_code in self.app.article_db.article.values:
+                rates = self.app.article_db[
+                    self.app.article_db.article == article.article_code
                 ].values[0]
                 article.stitch_rate = float(rates[1])
                 article.print_rate = float(rates[2])

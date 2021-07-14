@@ -6,21 +6,16 @@ from tkinter.ttk import Frame
 from frames.log_frame import LogFrame
 
 from frames.advanced_frames import ChooseFileFrame, ButtonAdvancedFrame
-from bom import Bom
-from article import Article
-from excel_report import ExcelReporting
-from net_margin import calculateNetMargin
+from core.bom import Bom
+from core.article import Article
+from core.excel_report import ExcelReporting
+from core.net_margin import calculateNetMargin
 
 
 class TabAdvanced(Frame):
-    def __init__(
-        self, container, bom_db, items_db, article_db, *args, **kwargs
-    ) -> None:
-        super().__init__(container, *args, **kwargs)
-        self.bom_db = bom_db
-        self.items_db = items_db
-        self.article_db = article_db
-
+    def __init__(self, container, app) -> None:
+        super().__init__(container)
+        self.app = app
         self.artinfo_db = pd.DataFrame()
 
         self.log_msg = StringVar(self)
@@ -38,7 +33,7 @@ class TabAdvanced(Frame):
 
     @property
     def is_db(self):
-        if self.bom_db.empty and self.items_db.empty:
+        if self.app.bom_db.empty and self.app.items_db.empty:
             return False
         else:
             return True
@@ -73,10 +68,10 @@ class TabAdvanced(Frame):
             return
 
         if self.artinfo_db.empty:
-            if self.article_db.empty:
+            if self.app.article_db.empty:
                 self.log_msg.set("Please choose a valid csv file!")
                 return
-            self.artinfo_db = self.article_db
+            self.artinfo_db = self.app.article_db
 
         cost_materials = []
         mrp_article = []
@@ -89,7 +84,7 @@ class TabAdvanced(Frame):
                 article = Article.from_bulk_list(item, rates)
 
                 bom = Bom(article=article)
-                response = bom.createFinalBom(self.bom_db, self.items_db)
+                response = bom.createFinalBom(self.app.bom_db, self.app.items_db)
                 print(f"Response: {response}")
                 if response["status"] == "OK":
                     cost_materials.append(bom.get_cost_of_materials)
@@ -113,10 +108,10 @@ class TabAdvanced(Frame):
             return
 
         if self.artinfo_db.empty:
-            if self.article_db.empty:
+            if self.app.article_db.empty:
                 self.log_msg.set("Please choose a valid csv file!")
                 return
-            self.artinfo_db = self.article_db
+            self.artinfo_db = self.app.article_db
 
         failed_list = []
         print("Trying for bulk costsheet creation, please hold on a bit.")
@@ -127,7 +122,7 @@ class TabAdvanced(Frame):
                 article = Article.from_bulk_list(item, rates)
                 print(f"Article: {article.article_code} - {i}")
                 bom = Bom(article=article)
-                response = bom.createFinalBom(self.bom_db, self.items_db)
+                response = bom.createFinalBom(self.app.bom_db, self.app.items_db)
                 print(f"{i} Response: {response} = {article.article_code}")
                 if response["status"] == "OK":
                     article.mrp = bom.bom_df.mrp.iloc[0]

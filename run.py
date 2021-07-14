@@ -5,15 +5,15 @@ Made by kalaLokia and Tony
 Github: https://github.com/kalalokia/python
 """
 
-from runapp import ARTINFO_DB
 import sys
 import pandas as pd
-from article import Article
-from bom import Bom
-from excel_report import ExcelReporting
+from core.article import Article
+from core.bom import Bom
+from core.excel_report import ExcelReporting
 import math
-from net_margin import calculateNetMargin
+from core.net_margin import calculateNetMargin
 from datetime import datetime
+import time
 
 # bom_source = "data/Bom Hierarchy final.xlsx"
 # items_source = "data/materials.xlsx"
@@ -28,6 +28,7 @@ try:
     # items_db = pd.read_excel(items_source, sheet_name="Sheet1", engine="openpyxl")
     bom_db = pd.read_csv(bom_source)
     items_db = pd.read_csv(items_source)
+    time.sleep(4)
 except FileNotFoundError:
     print("File not found! materials.xlsx or Bom Hierarchy final.xlsx")
 except:
@@ -35,43 +36,20 @@ except:
     print(e)
 
 
-try:
-    ARTICLE_INFO_DB = pd.read_csv(article_source)
-    ARTICLE_INFO_DB["article"] = ARTICLE_INFO_DB["article"].str.lower()
-except FileNotFoundError:
-    ARTICLE_INFO_DB = pd.DataFrame()
+# try:
+#     ARTICLE_INFO_DB = pd.read_csv(article_source)
+#     ARTICLE_INFO_DB["article"] = ARTICLE_INFO_DB["article"].str.lower()
+# except FileNotFoundError:
+#     ARTICLE_INFO_DB = pd.DataFrame()
 
-except:
-    e = sys.exc_info()[0]
-    print(e)
-
-
-# def openFile():
-#     global ARTLIST_DB
-
-#     filename = "C:/Users/nightfury/Workshop/data/articles.csv"
-
-#     try:
-#         ARTLIST_DB = pd.read_csv(filename)
-#     except:
-#         print("Couldn't read data! File missing or invalid.")
-
-#     if ARTLIST_DB.shape[1] != 4:
-#         ARTLIST_DB = None
-#         print("Correpted file. Accepts only 4 columns.")
-
-#     elif ARTLIST_DB[ARTLIST_DB.columns[0]].isnull().values.any():
-#         ARTLIST_DB = None
-#         print("Correpted file. Some article name is not provided in the data.")
-
-#     else:
-#         # ARTLIST_DB.replace({"0": math.nan, 0: math.nan}, inplace=True)
-#         print(f"Successfully fetched data from the given file.")
+# except:
+#     e = sys.exc_info()[0]
+#     print(e)
 
 
 if __name__ == "__main__":
 
-    article = Article(artno="DG9531", color="bk")
+    article = Article(artno="3290", color="br")
 
     bom = Bom(article=article)
     response = bom.createFinalBom(bom_db, items_db)

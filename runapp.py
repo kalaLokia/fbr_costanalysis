@@ -4,47 +4,26 @@ This is the main file for excecution in tkinter UI
 Made by kalaLokia
 """
 
-from tkinter import *
-from tkinter.ttk import *
+import threading
 import pandas as pd
+from tkinter import Tk, Frame, StringVar
+from tkinter.ttk import Notebook, Style
 from tabs.advanced_tab import TabAdvanced
 from tabs.general_tab import TabGeneral
-
+from frames.log_frame import LogFrame
 
 BOM_DATA_DIR = "data/Bom Hierarchy final.csv"
 ITEM_DATA_DIR = "data/materials.csv"
 ARTINFO_DIR = "data/articles.csv"
-ARTLIST_DB = pd.DataFrame()
-BOM_DB = pd.DataFrame()
-ITEMS_DB = pd.DataFrame()
-
-# Reading File
-print("Trying to fetch data from data/*.csv files.")
-try:
-    BOM_DB = pd.read_csv(BOM_DATA_DIR)
-    ITEMS_DB = pd.read_csv(ITEM_DATA_DIR)
-    print("Database ready!")
-
-except FileNotFoundError:
-    print("Requird files not found in the directory data.")
-except:
-    print("Something I didn't understand, please report.")
-
-try:
-    ARTINFO_DB = pd.read_csv(ARTINFO_DIR)
-    ARTINFO_DB["article"] = ARTINFO_DB["article"].str.lower()
-    ARTINFO_DB.fillna(0)
-except FileNotFoundError:
-    print("Article rate file not found")
-except:
-    print("Something wrong with rates file, please report.")
-
-print("Opening GUI..")
+APPLOG = []
 
 
 class MainApplication(Frame):
-    def __init__(self, root, *args, **kwargs):
+    def __init__(self, root, bomdb, itemdb, artdb, *args, **kwargs) -> None:
         super().__init__(root, *args, **kwargs)
+        self.bom_db = bomdb
+        self.items_db = itemdb
+        self.article_db = artdb
 
         style = Style(root)
         style.configure("B1.TButton", font=("Helvetica", 16))
@@ -52,8 +31,8 @@ class MainApplication(Frame):
 
         notebook = Notebook(root, width=400, height=470, padding=10)
 
-        tab_general = TabGeneral(notebook, BOM_DB, ITEMS_DB, ARTINFO_DB)
-        tab_advanced = TabAdvanced(notebook, BOM_DB, ITEMS_DB, ARTINFO_DB)
+        tab_general = TabGeneral(notebook, self)
+        tab_advanced = TabAdvanced(notebook, self)
 
         notebook.add(tab_general, text="General")
         notebook.add(tab_advanced, text="Advanced")
@@ -61,14 +40,82 @@ class MainApplication(Frame):
         notebook.pack()
 
 
-if __name__ == "__main__":
+class App(Tk):
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
 
-    # Root configuration
-    root = Tk()
+        self.log_msg = StringVar(self)
+        self.log_frame = LogFrame(self)
+        self.log_frame.pack(
+            fill="both", side="left", anchor="w", expand=True, padx=5, pady=5
+        )
+
+    def forgetLog(self) -> None:
+        self.log_frame.pack_forget()
+
+
+def loadDatabase(root: App) -> None:
+    bom_db = pd.DataFrame()
+    items_db = pd.DataFrame()
+    articles_db = pd.DataFrame()
+
+    APPLOG.append(">>  Looking up for required data...")
+    root.log_msg.set("\n".join(APPLOG))
+
+    try:
+        bom_db = pd.read_csv(BOM_DATA_DIR)
+        APPLOG.append(">>  Bom data successfully loaded.")
+    except FileNotFoundError:
+        APPLOG.append(f'>>  "{BOM_DATA_DIR}" Not Found! Failed to get bom data.')
+    except Exception as e:
+        APPLOG.append(">>  Unexpected error occured..!!!")
+        print(e)
+    finally:
+        root.log_msg.set("\n".join(APPLOG))
+
+    try:
+        items_db = pd.read_csv(ITEM_DATA_DIR)
+        APPLOG.append(">>  Item master data successfully loaded.")
+    except FileNotFoundError:
+        APPLOG.append(
+            f'>>  "{ITEM_DATA_DIR}" Not Found! Failed to get item master data.'
+        )
+    except Exception as e:
+        APPLOG.append(">>  Unexpected error occured..!!!")
+        print(e)
+    finally:
+        root.log_msg.set("\n".join(APPLOG))
+
+    APPLOG.append(f">>  Looking up for Articles rate file...")
+    root.log_msg.set("\n".join(APPLOG))
+    try:
+        articles_db = pd.read_csv(ARTINFO_DIR)
+        articles_db["article"] = articles_db["article"].str.lower()
+        articles_db.fillna(0)
+        APPLOG.append(">>  Articles rate file successfully loaded.")
+    except FileNotFoundError:
+        APPLOG.append(f'">>  {ARTINFO_DIR}" Not found! Net rate cannot be calculated.')
+    except Exception as e:
+        APPLOG.append(">>  Unexpected error occured..!!!")
+        print(e)
+    finally:
+        root.log_msg.set("\n".join(APPLOG))
+
+    if not bom_db.empty and not items_db.empty:
+        root.forgetLog()
+        MainApplication(root, bom_db, items_db, articles_db).pack()
+    else:
+        APPLOG.append(f">>  Failed to launch app.")
+        root.log_msg.set("\n".join(APPLOG))
+
+
+if __name__ == "__main__":
+    APPLOG.append(">>  Starting APP...")
+    root = App()
     root.title("Create Cost Sheet")
     root.geometry("400x470")
     # root.iconbitmap("icon/dollar_bulb.ico")
     root.resizable(0, 0)
 
-    MainApplication(root).pack()
+    threading.Thread(target=loadDatabase, args=(root,)).start()
     root.mainloop()
