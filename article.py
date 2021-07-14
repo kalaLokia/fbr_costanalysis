@@ -42,7 +42,9 @@ class Article:
 
     @property
     def get_filename(self) -> str:
-        return f"{self.artno.upper()} {self.color.upper()}-CS.xlsx"
+        return "{0} {1} {2}-cs.xlsx".format(
+            self.artno.upper(), self.color_name, self.category_name
+        )
 
     @property
     def category(self):
@@ -63,6 +65,64 @@ class Article:
             "boys": "b",
             "girls": "r",
         }.get(value.lower(), "g")
+
+    @property
+    def category_name(self):
+        return (
+            {
+                "g": "gents",
+                "l": "ladies",
+                "x": "giants XL",
+                "c": "children",
+                "k": "kids",
+                "b": "boys",
+                "r": "girls",
+            }
+            .get(self._category, self._category)
+            .title()
+        )
+
+    @property
+    def color_name(self):
+        return (
+            {
+                "bk": "black",
+                "br": "brown",
+                "bl": "blue",
+                "rd": "red",
+                "pk": "pink",
+                "ta": "tan",
+                "pe": "pink blue",
+                "lr": "blue red",
+                "gy": "grey",
+                "gd": "gold",
+                "co": "copper",
+                "wt": "white",
+                "gr": "green",
+                "or": "orange",
+                "nb": "navy blue",
+                "dn": "dark green",
+                "mh": "mehandi",
+                "ph": "peach",
+                "wk": "black white",
+                "ov": "olive",
+                "sk": "school black",
+                "tb": "tan black",
+                "mr": "maroon",
+                "st": "special tan",
+                "sa": "special black",
+                "nr": "navy blue red",
+                "ng": "navy blue grey",
+                "kg": "black grey",
+                "gd": "gold",
+                "tr": "tan brown",
+                "ny": "navy",
+                "rk": "red black",
+                "dr": "dark brown",
+            }
+            .get(self.color, self.color)
+            .title()
+        )
 
     def __str__(self):
         return self.article_code
