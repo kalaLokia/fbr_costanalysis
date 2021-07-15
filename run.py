@@ -1,8 +1,5 @@
 """
-This is the main file for excecution in console.
-
-Made by kalaLokia and Tony
-Github: https://github.com/kalalokia/python
+For easy test purpose console based access without tkinter UI
 """
 
 import sys
@@ -10,10 +7,6 @@ import pandas as pd
 from core.article import Article
 from core.bom import Bom
 from core.excel_report import ExcelReporting
-import math
-from core.net_margin import calculateNetMargin
-from datetime import datetime
-import time
 
 # bom_source = "data/Bom Hierarchy final.xlsx"
 # items_source = "data/materials.xlsx"
@@ -28,7 +21,6 @@ try:
     # items_db = pd.read_excel(items_source, sheet_name="Sheet1", engine="openpyxl")
     bom_db = pd.read_csv(bom_source)
     items_db = pd.read_csv(items_source)
-    time.sleep(4)
 except FileNotFoundError:
     print("File not found! materials.xlsx or Bom Hierarchy final.xlsx")
 except:

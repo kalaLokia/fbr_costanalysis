@@ -1,15 +1,18 @@
 from tkinter import StringVar
 from tkinter.ttk import Frame
-from frames.log_frame import LogFrame
-from frames.general_frames import (
+
+from app import APPLOG
+from app.frames.log_frame import LogFrame
+from app.frames.general_frames import (
     EntryGeneralFrame,
     ButtonGeneralFrame,
     InfoGeneralFrame,
 )
 from core.article import Article
 from core.bom import Bom
+from core.cost_analysis import calculateProfit
 from core.excel_report import ExcelReporting
-from core.net_margin import calculateNetMarginSingle
+from core import settings
 
 
 class TabGeneral(Frame):
@@ -34,7 +37,7 @@ class TabGeneral(Frame):
         self.frame3 = InfoGeneralFrame(self)
         self.frame4 = LogFrame(self)
 
-        self.log_msg.set("Message logging enabled")
+        self.log_msg.set(APPLOG[-1])
 
         self.frame1.pack(pady=20)
         self.frame2.pack(pady=10)
@@ -82,7 +85,6 @@ class TabGeneral(Frame):
 
         bom = Bom(article=article)
         response = bom.createFinalBom(self.app.bom_db, self.app.items_db)
-        print(f"Response: {response}")
         if response["status"] == "OK":
             article = bom.article
             if not self.app.article_db.empty:
@@ -103,10 +105,12 @@ class TabGeneral(Frame):
                 bom.packing_df,
             )
             response = reporting.generateTable()
-            print(f"Response: {response}")
+
             self.log_msg.set(response.get("message", "Something bad happened."))
         else:
             self.log_msg.set(response.get("message", "Something bad happened."))
+
+        print(f"Response: {response}")
 
     def calculateNetMargin(self):
         print("f : Calculate net margin")
@@ -116,7 +120,7 @@ class TabGeneral(Frame):
 
         self.hide_info_frame()
         if self.app.article_db.empty:
-            self.log_msg.set("I didn't find file articles.csv in dir data.")
+            self.log_msg.set("Cannot calculate costs, rates file missing.")
             print("Can't calculate netmargin, rates file missing.")
             return
 
@@ -130,7 +134,6 @@ class TabGeneral(Frame):
         article.category = self.var_category.get()
         bom = Bom(article=article)
         response = bom.createFinalBom(self.app.bom_db, self.app.items_db)
-        print(f"Response: {response}")
         if response["status"] == "OK":
             article = bom.article
             if article.article_code in self.app.article_db.article.values:
@@ -141,20 +144,23 @@ class TabGeneral(Frame):
                 article.print_rate = float(rates[2])
                 article.basic_rate = float(rates[3])
 
-                data = calculateNetMarginSingle(article, bom.get_cost_of_materials)
+                data = calculateProfit(article, bom.get_cost_of_materials)
 
                 self.show_info_frame(netm=data[2])
                 self.var_netm.set(f"{data[2]}%")
                 self.var_basic.set(f"₹{article.basic_rate}")
                 self.var_mrp.set(f"₹{article.mrp}")
-                self.var_sc.set(article.stitch_rate)
-                self.var_pc.set(article.print_rate)
-                self.var_cop.set(data[0])
+                self.var_sc.set(f"₹{article.stitch_rate}")
+                self.var_pc.set(f"₹{article.print_rate}")
+                self.var_cop.set(f"₹{data[0]}")
 
             else:
-                self.log_msg.set(f'{bom.article} is not in "articles.csv" file.')
-                print(f'{bom.article} is not in "articles.csv" file.')
+                self.log_msg.set(
+                    f'{bom.article.article_name} is not in "{settings.ARTICLE_RATES_DIR}"'
+                )
+                print(f"{bom.article} is not in rates file.")
                 return
         else:
             self.log_msg.set(response.get("message", "Something bad happened."))
+            print(f"Response: {response}")
             return

@@ -21,10 +21,10 @@ class Article:
         self.case_type = case_type.lower()
         self.brand = brand.lower()
         self.pairs_in_case = 0
-        self.mrp = 0
-        self.stitch_rate = 0
-        self.print_rate = 0
-        self.basic_rate = 0
+        self.mrp = 0.0
+        self.stitch_rate = 0.0
+        self.print_rate = 0.0
+        self.basic_rate = 0.0
 
     @property
     def article_name(self) -> str:

@@ -53,7 +53,7 @@ class Bom:
         total_sum = math.ceil(total_sum * 100) / 100  # round up to 2 decimal places
         return total_sum
 
-    def createFinalBom(self, df, items_df) -> None:
+    def createFinalBom(self, df, items_df) -> dict:
         mc_name = self.article.get_mc_name
         mc_conditions = (df["Father"].str.lower() == mc_name) & (
             df["Process Order"] == 1
@@ -101,7 +101,7 @@ class Bom:
         if self.bom_df.empty:
             return {
                 "status": "NOT FOUND",
-                "message": f'Article "{self.article.article_name}" not found in the database. Update the database if it is too old.',
+                "message": f'Bom for article "{self.article.article_name}" not found in the database. Update the database if it is too old.',
             }
 
         self.updateBom(items_df)
@@ -149,7 +149,7 @@ class Bom:
         self.bom_df["childrate"] = pd.to_numeric(
             self.bom_df["childrate"], errors="coerce"
         )
-        self.article.mrp = self.bom_df.mrp.iloc[0]
+        self.article.mrp = float(self.bom_df.mrp.iloc[0])
         self.article.pairs_in_case = int(self.get_pairs_in_mc)
         self.updateRexinConsumption()
         self.updateComponentConsumption()

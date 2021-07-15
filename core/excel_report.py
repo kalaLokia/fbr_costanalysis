@@ -1,9 +1,12 @@
 """
 Excel reporting.
+
+Yep, I know it is little mess ;')
 """
 from io import BytesIO
 import pandas as pd
 from .article import Article
+from core.settings import FIXED_RATES, SELLING_DISTRIBUTION, SALES_RETURN, ROYALTY
 
 
 class ExcelReporting:
@@ -235,7 +238,6 @@ class ExcelReporting:
             self.pm_start_row - 1, 3, "Cost of Footwear Sole", fmt_textBL
         )
 
-        # TODO: Set dynamic value : footwear sole rate or formula
         cost_sole = f"=SUM($G${self.pu_start_row + 2}:$G${self.pm_start_row - 2})"
         self.worksheet.write(self.pm_start_row - 1, 6, cost_sole, fmt_textBR)
 
@@ -258,7 +260,6 @@ class ExcelReporting:
             self.worksheet.write(self.pm_end_row + 2, c, None, fmt_textBC_grey)
         # TOTAL COST OF MATERIALS
         self.worksheet.write(self.last_row, 3, "TOTAL COST OF MATERIALS", fmt_textBL)
-        # TODO: Set dynamic value for the total cost
         self.worksheet.write_formula(self.last_row, 6, total_cost_upper, fmt_textBR)
         self.row_total_cost = self.last_row + 1
         self.last_row += 2
@@ -278,12 +279,14 @@ class ExcelReporting:
             ["8-Finance Costs", 1.06],
         ]
         start = self.last_row + 1
-        for item in data:
-            self.worksheet.write(self.last_row, 3, item[0], fmt_L)
-            self.worksheet.write(self.last_row, 6, item[1], fmt_R)
+        for i, (key, value) in enumerate(FIXED_RATES.items()):
+            item = "{0}-{1}".format(
+                i, key.replace("_", " ").replace("and", "&").title()
+            )
+            self.worksheet.write(self.last_row, 3, item, fmt_L)
+            self.worksheet.write(self.last_row, 6, value, fmt_R)
             self.last_row += 1
         end = self.last_row
-        # TODO: Formula
         self.row_total_other_expense = self.last_row + 3
         self.worksheet.write_formula(
             self.row_total_other_expense - 1, 6, f"=SUM($G${start}:$G${end})", fmt_B
@@ -416,18 +419,18 @@ class ExcelReporting:
             ["", "", "", [fmt_L, fmt_L, fmt_L]],
             [
                 "Selling and Distribution",
-                "=16.75%",
+                SELLING_DISTRIBUTION,
                 sell_distr_F,
                 [fmt_L, fmt_percent, fmt_R],
             ],
-            ["Royalty", "=0.50%", royalty_F, [fmt_L, fmt_percent, fmt_R]],
+            ["Royalty", ROYALTY, royalty_F, [fmt_L, fmt_percent, fmt_R]],
             [
                 "Cost of Goods Sold",
                 "",
                 goods_sold_F,
                 [fmt_reddishL, fmt_reddishL, fmt_reddishR],
             ],
-            ["Sales Return", "=1%", sale_return_F, [fmt_L, fmt_percent, fmt_R]],
+            ["Sales Return", SALES_RETURN, sale_return_F, [fmt_L, fmt_percent, fmt_R]],
             ["TOTAL", "", total_F, [fmt_B, fmt_BC, fmt_R]],
             [
                 "NET MARGIN",
@@ -533,5 +536,5 @@ class ExcelReporting:
 
         return {
             "status": "CREATED",
-            "message": f"Successfully created {self.article.article_code.upper()}.",
+            "message": f'Successfully exported costsheet for "{self.article.article_name}".',
         }

@@ -7,13 +7,19 @@ class ButtonGeneralFrame(Frame):
 
         # Button
         self.btnCreate = Button(
-            self, text="Create", command=tab.exportCostSheet, style="B1.TButton"
-        ).grid(row=0, column=0, padx=10)
+            self,
+            text="Export",
+            command=tab.exportCostSheet,
+            padding=6,
+            style="B1.TButton",
+        ).grid(row=0, column=0, padx=15)
         self.btnNetMargin = Button(
-            self, text="Net margin", command=tab.calculateNetMargin, style="B1.TButton"
-        ).grid(
-            row=0, column=1
-        )  # findNetMargin
+            self,
+            text="Analyse",
+            command=tab.calculateNetMargin,
+            padding=6,
+            style="B1.TButton",
+        ).grid(row=0, column=1, padx=15)
 
 
 class EntryGeneralFrame(Frame):
@@ -124,6 +130,8 @@ class EntryGeneralFrame(Frame):
         self.case_type["values"] = self.CASE_TYPES
         self.size.insert(0, "8")
 
+        self.artno.focus()
+
 
 class InfoGeneralFrame(Frame):
     COL_GREEN = "#179900"
@@ -147,9 +155,9 @@ class InfoGeneralFrame(Frame):
         Label(self, text="Printing Charges", font=("Halvetica", self.name_txt2)).grid(
             row=1, column=1, sticky="ns", padx=self.pad_x
         )
-        Label(self, text="Cost of Production", font=("Halvetica", self.name_txt2)).grid(
-            row=1, column=2, sticky="ns", padx=self.pad_x
-        )
+        Label(
+            self, text="Cost of Upper Prod.", font=("Halvetica", self.name_txt2)
+        ).grid(row=1, column=2, sticky="ns", padx=self.pad_x)
         Label(
             self, textvariable=tab.var_sc, font=("Halvetica", self.rate_txt2, "bold")
         ).grid(row=0, column=0, sticky="ns", padx=self.pad_x)

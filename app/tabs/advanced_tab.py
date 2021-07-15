@@ -1,15 +1,16 @@
 from datetime import datetime
-import pandas as pd
-from tkinter import StringVar
-from tkinter import filedialog as fd
-from tkinter.ttk import Frame
-from frames.log_frame import LogFrame
 
-from frames.advanced_frames import ChooseFileFrame, ButtonAdvancedFrame
+import pandas as pd
+from tkinter import filedialog as fd
+from tkinter import StringVar
+from tkinter.ttk import Frame
+
+from app.frames.advanced_frames import ChooseFileFrame, ButtonAdvancedFrame
+from app.frames.log_frame import LogFrame
 from core.bom import Bom
 from core.article import Article
 from core.excel_report import ExcelReporting
-from core.net_margin import calculateNetMargin
+from core.cost_analysis import costAnalysisReport
 
 
 class TabAdvanced(Frame):
@@ -94,7 +95,7 @@ class TabAdvanced(Frame):
                     mrp_article.append(0)
 
         # Creating data
-        df = calculateNetMargin(self.artinfo_db, mrp_article, cost_materials)
+        df = costAnalysisReport(self.artinfo_db, mrp_article, cost_materials)
         filename = "files/report_{0}.csv".format(
             datetime.now().strftime("%d%m%y%H%M%S")
         )
@@ -114,18 +115,18 @@ class TabAdvanced(Frame):
             self.artinfo_db = self.app.article_db
 
         failed_list = []
-        print("Trying for bulk costsheet creation, please hold on a bit.")
-        for i, row in self.artinfo_db.iterrows():
+
+        for _, row in self.artinfo_db.iterrows():
             if len(row) >= 4:
                 item = row[0]
                 rates = (row[1], row[2], row[3])
                 article = Article.from_bulk_list(item, rates)
-                print(f"Article: {article.article_code} - {i}")
+                # print(f"Article: {article.article_code} - {i}")
                 bom = Bom(article=article)
                 response = bom.createFinalBom(self.app.bom_db, self.app.items_db)
-                print(f"{i} Response: {response} = {article.article_code}")
+                # print(f"{i} Response: {response} = {article.article_code}")
                 if response["status"] == "OK":
-                    article.mrp = bom.bom_df.mrp.iloc[0]
+                    article.mrp = bom.article.mrp
                     article.pairs_in_case = bom.get_pairs_in_mc
                     reporting = ExcelReporting(
                         article,

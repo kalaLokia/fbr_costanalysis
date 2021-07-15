@@ -24,14 +24,16 @@ class ButtonAdvancedFrame(Frame):
 
         Button(
             self,
-            text="Calculate\nprofit/loss",
+            text="Export Cost Report",
             command=tab.generateNetMarginReport,
+            padding=10,
             style="B1.TButton",
         ).pack()
 
         Button(
             self,
-            text="Generate\nCostsheet",
+            text="Export All Costsheets",
             command=tab.generateBulkCostsheet,
+            padding=10,
             style="B1.TButton",
         ).pack(pady=20)
