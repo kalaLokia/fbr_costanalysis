@@ -1,3 +1,7 @@
+"""
+Design for all frames inside advanced tab.
+"""
+
 from tkinter.ttk import Button, Frame, Entry
 
 

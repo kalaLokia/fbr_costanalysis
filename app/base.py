@@ -4,9 +4,9 @@ Main Tkinter UI setup.
 from tkinter import Tk, Frame, StringVar
 from tkinter.ttk import Notebook, Style
 
+from app.frames.log_frame import LogFrame
 from app.tabs.advanced_tab import TabAdvanced
 from app.tabs.general_tab import TabGeneral
-from app.frames.log_frame import LogFrame
 
 
 class App(Tk):

@@ -1,3 +1,7 @@
+"""
+Design for all frames inside general tab.
+"""
+
 from tkinter.ttk import Frame, Button, Label, Entry, OptionMenu, Combobox
 
 

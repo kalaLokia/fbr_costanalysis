@@ -5,7 +5,8 @@ Yep, I know it is little mess ;')
 """
 from io import BytesIO
 import pandas as pd
-from .article import Article
+
+from core.article import Article
 from core.settings import FIXED_RATES, SELLING_DISTRIBUTION, SALES_RETURN, ROYALTY
 
 
@@ -268,16 +269,6 @@ class ExcelReporting:
         self.footer(fmt_textBL, fmt_textBC, fmt_textL, fmt_textR)
 
     def constRateDetails(self, fmt_L, fmt_R, fmt_B):
-        data = [
-            ["1-Wages & Benefits", 9.72],
-            ["2-Salaries & Emoluments", 0.79],
-            ["3-Other Factory Overheads", 1.73],
-            ["4-Admin Expenses", 1.37],
-            ["5-Interest & Bank Charges", 0.02],
-            ["6-Depreciation", 4.35],
-            ["7-Other Expenses", "-"],
-            ["8-Finance Costs", 1.06],
-        ]
         start = self.last_row + 1
         for i, (key, value) in enumerate(FIXED_RATES.items()):
             item = "{0}-{1}".format(

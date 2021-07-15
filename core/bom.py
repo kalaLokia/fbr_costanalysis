@@ -3,7 +3,9 @@ Getting actual BOM of an article.
 """
 
 import math
+
 import pandas as pd
+
 from .article import Article
 
 

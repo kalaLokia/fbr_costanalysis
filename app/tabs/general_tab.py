@@ -1,3 +1,6 @@
+"""
+All General tab related logic here.
+"""
 from tkinter import StringVar
 from tkinter.ttk import Frame
 
@@ -8,11 +11,11 @@ from app.frames.general_frames import (
     ButtonGeneralFrame,
     InfoGeneralFrame,
 )
+from core import settings
 from core.article import Article
 from core.bom import Bom
 from core.cost_analysis import calculateProfit
 from core.excel_report import ExcelReporting
-from core import settings
 
 
 class TabGeneral(Frame):

@@ -1,3 +1,7 @@
+"""
+Configuration file setup.
+"""
+
 import configparser
 from typing import Tuple
 from . import *

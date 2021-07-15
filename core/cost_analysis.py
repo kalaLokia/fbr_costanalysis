@@ -1,9 +1,10 @@
 """
 Calculation of net margin, cost of production, etc.
 """
-from typing import TYPE_CHECKING, Union
 import math
-from .article import Article
+from typing import TYPE_CHECKING, Union
+
+from core.article import Article
 from core.settings import SELL_DISTR_ROYALTY, SALES_RETURN, EXPENSES_OVERHEADS
 
 if TYPE_CHECKING:

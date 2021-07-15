@@ -1,4 +1,6 @@
-# from tkinter.ttk import Frame,
+"""
+Design of common log frame.
+"""
 from tkinter import Message, Frame
 
 

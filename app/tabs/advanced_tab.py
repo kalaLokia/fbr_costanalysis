@@ -1,3 +1,6 @@
+"""
+All Advanced tab related logic here.
+"""
 from datetime import datetime
 
 import pandas as pd
@@ -7,10 +10,10 @@ from tkinter.ttk import Frame
 
 from app.frames.advanced_frames import ChooseFileFrame, ButtonAdvancedFrame
 from app.frames.log_frame import LogFrame
-from core.bom import Bom
 from core.article import Article
-from core.excel_report import ExcelReporting
+from core.bom import Bom
 from core.cost_analysis import costAnalysisReport
+from core.excel_report import ExcelReporting
 
 
 class TabAdvanced(Frame):
