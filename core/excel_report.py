@@ -524,6 +524,10 @@ class ExcelReporting:
             }
         except Exception as e:
             print(e)
+            return {
+                "status": "ERR",
+                "message": f"Uncaught error:\n {e}",
+            }
 
         return {
             "status": "CREATED",

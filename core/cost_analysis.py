@@ -18,11 +18,13 @@ def costAnalysisReport(df, mrps: list, material_costs: list) -> "DataFrame":
 
     df["mrp"] = mrps
     df["material cost"] = material_costs
+    df["cost of upper production"] = (
+        df[df.columns[1]] + df[df.columns[2]] + df["material cost"]
+    )
 
     # Cost of Production including overheads and other expenses
     df["cost of production"] = (
-        (df[df.columns[1]] + df[df.columns[2]] + df["material cost"])
-        + EXPENSES_OVERHEADS
+        df["cost of upper production"] + EXPENSES_OVERHEADS
     ).round(2)
 
     # Total Cost: Selling & Distribution, Royalty, Sales Return added
