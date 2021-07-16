@@ -129,5 +129,7 @@ dmypy.json
 .pyre/
 
 # external files
+/files
+/data
 *.csv
 *.xlsx

@@ -112,14 +112,19 @@ class Article:
                 "mr": "maroon",
                 "st": "special tan",
                 "sa": "special black",
-                "nr": "navy blue red",
-                "ng": "navy blue grey",
+                "nr": "navyblue red",
+                "ng": "navyblue grey",
                 "kg": "black grey",
                 "gd": "gold",
                 "tr": "tan brown",
                 "ny": "navy",
                 "rk": "red black",
                 "dr": "dark brown",
+                "lr": "blue red",
+                "bg": "beige",
+                "lt": "blue tan",
+                "dg": "dark grey",
+                "bb": "blue back",
             }
             .get(self.color, self.color)
             .title()

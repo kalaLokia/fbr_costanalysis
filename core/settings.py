@@ -1,11 +1,12 @@
 """
 Configuration file setup.
 """
-
+import os
 import configparser
 from typing import Tuple
 from . import *
 
+os.makedirs(os.path.dirname("files/test.txt"), exist_ok=True)
 
 config = configparser.ConfigParser(interpolation=None)
 ok_config = config.read("config.ini")
@@ -67,7 +68,6 @@ else:
         result, ok = to_float(config.get("OTHER CHARGES", "sales_return"))
         if ok:
             SALES_RETURN = result
-            print(SALES_RETURN)
         else:
             print("Default values used for SALES RETURN")
 

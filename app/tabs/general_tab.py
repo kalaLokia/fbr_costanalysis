@@ -70,7 +70,7 @@ class TabGeneral(Frame):
                 self.frame3.lbl_netm.config(foreground="#000")
 
     def exportCostSheet(self):
-        print("f : Export costsheet")
+        # print("f : Export costsheet")
         if not self.is_db:
             print("Accessing db failed.")
             return
@@ -113,10 +113,10 @@ class TabGeneral(Frame):
         else:
             self.log_msg.set(response.get("message", "Something bad happened."))
 
-        print(f"Response: {response}")
+        # print(f"Response: {response}")
 
     def calculateNetMargin(self):
-        print("f : Calculate net margin")
+        # print("f : Calculate net margin")
         if not self.is_db:
             print("Accessing db failed.")
             return
@@ -124,7 +124,7 @@ class TabGeneral(Frame):
         self.hide_info_frame()
         if self.app.article_db.empty:
             self.log_msg.set("Cannot calculate costs, rates file missing.")
-            print("Can't calculate netmargin, rates file missing.")
+            # print("Can't calculate netmargin, rates file missing.")
             return
 
         article = Article(
@@ -161,9 +161,9 @@ class TabGeneral(Frame):
                 self.log_msg.set(
                     f'{bom.article.article_name} is not in "{settings.ARTICLE_RATES_DIR}"'
                 )
-                print(f"{bom.article} is not in rates file.")
+                # print(f"{bom.article} is not in rates file.")
                 return
         else:
             self.log_msg.set(response.get("message", "Something bad happened."))
-            print(f"Response: {response}")
+            # print(f"Response: {response}")
             return

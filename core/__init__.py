@@ -16,6 +16,6 @@ FIXED_RATES = {
     "admin_expenses": 1.37,
     "interest_and_bank_charges": 0.02,
     "depreciation": 4.35,
-    "other_expenses": 10.0,
+    "other_expenses": 0.0,
     "finance_costs": 1.06,
 }  # EXPENSES_AND_OVERHEADS

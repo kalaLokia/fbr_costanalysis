@@ -1,9 +1,8 @@
 """
 Main module for the program excecution.
 
-Made by kalaLokia
+Made with ❤️ by kalaLokia
 """
-
 import threading
 from typing import Tuple
 
@@ -81,5 +80,7 @@ if __name__ == "__main__":
     # root.iconbitmap("icon/dollar_bulb.ico")
     root.resizable(0, 0)
 
-    threading.Thread(target=loadDatabase, args=(root,)).start()
+    thread = threading.Thread(target=loadDatabase, args=(root,))
+    thread.daemon = True
+    thread.start()
     root.mainloop()
