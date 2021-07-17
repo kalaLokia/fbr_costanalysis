@@ -2,6 +2,8 @@
 Design for all frames inside general tab.
 """
 
+from tkinter.constants import DISABLED
+from tkinter.font import NORMAL
 from tkinter.ttk import Frame, Button, Label, Entry, OptionMenu, Combobox
 
 
@@ -24,6 +26,14 @@ class ButtonGeneralFrame(Frame):
             padding=6,
             style="B1.TButton",
         ).grid(row=0, column=1, padx=15)
+
+    def disableButton(self):
+        self.btnCreate["state"] = DISABLED
+        self.btnNetMargin["state"] = DISABLED
+
+    def enableButton(self):
+        self.btnCreate["state"] = NORMAL
+        self.btnNetMargin["state"] = NORMAL
 
 
 class EntryGeneralFrame(Frame):

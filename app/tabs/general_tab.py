@@ -74,7 +74,7 @@ class TabGeneral(Frame):
         if not self.is_db:
             print("Accessing db failed.")
             return
-
+        self.frame2.disableButton()
         self.hide_info_frame()
 
         article = Article(
@@ -112,6 +112,8 @@ class TabGeneral(Frame):
             self.log_msg.set(response.get("message", "Something bad happened."))
         else:
             self.log_msg.set(response.get("message", "Something bad happened."))
+
+        self.frame2.enableButton()
 
         # print(f"Response: {response}")
 

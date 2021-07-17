@@ -2,6 +2,7 @@
 Design for all frames inside advanced tab.
 """
 
+from tkinter.constants import DISABLED, NORMAL
 from tkinter.ttk import Button, Frame, Entry
 
 
@@ -26,18 +27,28 @@ class ButtonAdvancedFrame(Frame):
     def __init__(self, tab, *args, **kwargs) -> None:
         super().__init__(tab, *args, **kwargs)
 
-        Button(
+        self.b1 = Button(
             self,
             text="Export Cost Report",
             command=tab.generateNetMarginReport,
             padding=10,
             style="B1.TButton",
-        ).pack()
+        )
 
-        Button(
+        self.b2 = Button(
             self,
             text="Export All Costsheets",
             command=tab.generateBulkCostsheet,
             padding=10,
             style="B1.TButton",
-        ).pack(pady=20)
+        )
+        self.b1.pack()
+        self.b2.pack(pady=20)
+
+    def disableButtons(self):
+        self.b1["state"] = DISABLED
+        self.b2["state"] = DISABLED
+
+    def enableButtons(self):
+        self.b1["state"] = NORMAL
+        self.b2["state"] = NORMAL

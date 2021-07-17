@@ -9,7 +9,7 @@ from . import *
 os.makedirs(os.path.dirname("files/test.txt"), exist_ok=True)
 
 config = configparser.ConfigParser(interpolation=None)
-ok_config = config.read("config.ini")
+ok_config = config.read(".config.ini")
 
 
 def to_float(input: str) -> Tuple[float, bool]:

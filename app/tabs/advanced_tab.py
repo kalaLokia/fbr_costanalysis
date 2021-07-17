@@ -32,15 +32,15 @@ class TabAdvanced(Frame):
         self.log_status.set("\u2591" * 31)
         self.picked_file.set("No file selected")
 
-        frame1 = ChooseFileFrame(self)
-        frame2 = ButtonAdvancedFrame(self)
-        frame3 = LogFrame(self)
-        frame4 = LogStatus(self)
+        self.frame1 = ChooseFileFrame(self)
+        self.frame2 = ButtonAdvancedFrame(self)
+        self.frame3 = LogFrame(self)
+        self.frame4 = LogStatus(self)
 
-        frame1.pack(pady=35)
-        frame2.pack(pady=25)
-        frame3.pack(pady=5)
-        frame4.pack(pady=15)
+        self.frame1.pack(pady=35)
+        self.frame2.pack(pady=25)
+        self.frame3.pack(pady=5)
+        self.frame4.pack(pady=15)
 
     @property
     def is_db(self):
@@ -83,7 +83,7 @@ class TabAdvanced(Frame):
                 return
             self.artinfo_db = self.app.article_db
 
-        def wrapped_func(self):
+        def wrapped_func(self: TabAdvanced):
             cost_materials = []
             mrp_article = []
             length = 31
@@ -107,6 +107,8 @@ class TabAdvanced(Frame):
                         cost_materials.append(0)
                         mrp_article.append(0)
 
+            self.frame2.enableButtons()
+
             # Creating data
             df = costAnalysisReport(self.artinfo_db, mrp_article, cost_materials)
             filename = "files/Cost Analysis Report [{0}].csv".format(
@@ -117,6 +119,7 @@ class TabAdvanced(Frame):
             # print(f"Report ready. {filename}")
             self.log_status.set("\u2588" * length)
 
+        self.frame2.disableButtons()
         self.log_msg.set("Please wait...")
         thread = threading.Thread(target=wrapped_func, args=(self,))
         thread.daemon = True
