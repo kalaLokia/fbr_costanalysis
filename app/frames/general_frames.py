@@ -18,14 +18,16 @@ class ButtonGeneralFrame(Frame):
             command=tab.exportCostSheet,
             padding=6,
             style="B1.TButton",
-        ).grid(row=0, column=0, padx=15)
+        )
         self.btnNetMargin = Button(
             self,
             text="Analyse",
             command=tab.calculateNetMargin,
             padding=6,
             style="B1.TButton",
-        ).grid(row=0, column=1, padx=15)
+        )
+        self.btnCreate.grid(row=0, column=0, padx=15)
+        self.btnNetMargin.grid(row=0, column=1, padx=15)
 
     def disableButton(self):
         self.btnCreate["state"] = DISABLED
