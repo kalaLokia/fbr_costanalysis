@@ -165,8 +165,10 @@ class Bom:
         """Returns list of heads in the given dataframe's column Child"""
         condition1 = df["Child"].str.startswith("3-") | df["Child"].str.startswith("4-")
         condition2 = (
-            df["Child"].str.lower().str.endswith(self.article.get_category_size)
-            | df["Child"].str.lower().str.endswith(self.article.category)
+            # df["Child"].str.lower().str.endswith(self.article.get_category_size) |
+            df["Child"]
+            .str.lower()
+            .str.contains(f"[gxlbrcki](?:{self.article.get_str_size})?$", regex=True)
             | df["Child"].str.lower().str.startswith("4-pux-")
         )
         return df[condition1 & condition2]["Child"].unique()

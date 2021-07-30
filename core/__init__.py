@@ -19,3 +19,5 @@ FIXED_RATES = {
     "other_expenses": 0.0,
     "finance_costs": 1.06,
 }  # EXPENSES_AND_OVERHEADS
+
+CASE_TYPES = ["1", "2", "3"]

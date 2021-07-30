@@ -71,5 +71,14 @@ else:
         else:
             print("Default values used for SALES RETURN")
 
+    if config.has_section("CASE TYPES"):
+        data = []
+        for item in dict(config.items("CASE TYPES")).values():
+            data.append(item)
+
+        if data:
+            CASE_TYPES = data
+
+
 SELL_DISTR_ROYALTY = SELLING_DISTRIBUTION + ROYALTY
 EXPENSES_OVERHEADS = sum(FIXED_RATES.values())

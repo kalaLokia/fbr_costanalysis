@@ -6,6 +6,9 @@ from tkinter.constants import DISABLED
 from tkinter.font import NORMAL
 from tkinter.ttk import Frame, Button, Label, Entry, OptionMenu, Combobox
 
+from core.settings import CASE_TYPES
+from . import BRANDS, CATEGORIES
+
 
 class ButtonGeneralFrame(Frame):
     def __init__(self, tab, *args, **kwargs) -> None:
@@ -39,17 +42,6 @@ class ButtonGeneralFrame(Frame):
 
 
 class EntryGeneralFrame(Frame):
-    CASE_TYPES = ["1", "2", "3", "2-P6", "3-P6"]
-    CATEGORIES = ["Gents", "Ladies", "Giants", "Boys", "Girls", "Kids", "Children"]
-    BRANDS = [
-        "PRIDE",
-        "DEBONGO",
-        "VKC DEBONGO",
-        "KAPERS",
-        "STILE",
-        "L.PRIDE",
-        "SMARTAK",
-    ]
 
     txtSize = 12
     lblSize = 10
@@ -92,10 +84,8 @@ class EntryGeneralFrame(Frame):
         self.size = Entry(self, width=5, font=("Halvetica", self.txtSize))
 
         # Option Menu
-        self.brand = OptionMenu(self, tab.var_brand, self.BRANDS[0], *self.BRANDS)
-        self.category = OptionMenu(
-            self, tab.var_category, self.CATEGORIES[0], *self.CATEGORIES
-        )
+        self.brand = OptionMenu(self, tab.var_brand, BRANDS[0], *BRANDS)
+        self.category = OptionMenu(self, tab.var_category, CATEGORIES[0], *CATEGORIES)
         self.case_type = Combobox(self, textvariable=tab.var_casetype, width=12)
 
         # Align User Input Widgets
@@ -142,8 +132,8 @@ class EntryGeneralFrame(Frame):
         )
 
         # default values
-        tab.var_casetype.set(self.CASE_TYPES[0])
-        self.case_type["values"] = self.CASE_TYPES
+        tab.var_casetype.set(CASE_TYPES[0])
+        self.case_type["values"] = CASE_TYPES
         self.size.insert(0, "8")
 
         self.artno.focus()

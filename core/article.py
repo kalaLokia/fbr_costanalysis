@@ -44,6 +44,10 @@ class Article:
         return "{}{:02d}".format(self.category, self.size)
 
     @property
+    def get_str_size(self) -> str:
+        return "{:02d}".format(self.size)
+
+    @property
     def get_filename(self) -> str:
         return f"{self.article_name}-cs.xlsx"
 
