@@ -1,6 +1,6 @@
 # DEFAULT CONFIGURATIONS TO USE IF "config.ini" IS NOT ACCESSIBLE
 # OR DOESN'T CONTAINS REQUIRED SECTIONS
-
+DB_DIR = "data/db.csv"
 BOM_DATA_DIR = "data/Bom Hierarchy final.csv"
 ITEM_DATA_DIR = "data/materials.csv"
 ARTICLE_RATES_DIR = "data/articles.csv"

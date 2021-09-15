@@ -1,5 +1,6 @@
 CATEGORIES = ["Gents", "Ladies", "Giants", "Boys", "Girls", "Kids", "Children"]
 BRANDS = [
+    "",
     "PRIDE",
     "DEBONGO",
     "VKC DEBONGO",

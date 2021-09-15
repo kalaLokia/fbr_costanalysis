@@ -44,7 +44,7 @@ class TabAdvanced(Frame):
 
     @property
     def is_db(self):
-        if self.app.bom_db.empty and self.app.items_db.empty:
+        if self.app.bom_db.empty:
             return False
         else:
             return True
@@ -98,7 +98,7 @@ class TabAdvanced(Frame):
                     article = Article.from_bulk_list(item, rates)
 
                     bom = Bom(article=article)
-                    response = bom.createFinalBom(self.app.bom_db, self.app.items_db)
+                    response = bom.createFinalBom(self.app.bom_db)
                     # print(f"Response: {response}")
                     if response["status"] == "OK":
                         cost_materials.append(bom.get_cost_of_materials)
@@ -148,7 +148,7 @@ class TabAdvanced(Frame):
                     rates = (row[1], row[2], row[3])
                     article = Article.from_bulk_list(item, rates)
                     bom = Bom(article=article)
-                    response = bom.createFinalBom(self.app.bom_db, self.app.items_db)
+                    response = bom.createFinalBom(self.app.bom_db)
                     if response["status"] == "OK":
                         article.mrp = bom.article.mrp
                         article.pairs_in_case = bom.get_pairs_in_mc

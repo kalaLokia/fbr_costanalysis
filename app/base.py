@@ -24,10 +24,9 @@ class App(Tk):
 
 
 class MainApplication(Frame):
-    def __init__(self, root, bomdb, itemdb, artdb, *args, **kwargs) -> None:
+    def __init__(self, root, bomdb, artdb, *args, **kwargs) -> None:
         super().__init__(root, *args, **kwargs)
         self.bom_db = bomdb
-        self.items_db = itemdb
         self.article_db = artdb
 
         style = Style(root)

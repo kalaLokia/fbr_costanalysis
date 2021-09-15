@@ -49,7 +49,7 @@ class TabGeneral(Frame):
 
     @property
     def is_db(self):
-        if self.app.bom_db.empty and self.app.items_db.empty:
+        if self.app.bom_db.empty:
             return False
         else:
             return True
@@ -87,7 +87,7 @@ class TabGeneral(Frame):
         article.category = self.var_category.get()
 
         bom = Bom(article=article)
-        response = bom.createFinalBom(self.app.bom_db, self.app.items_db)
+        response = bom.createFinalBom(self.app.bom_db)
         if response["status"] == "OK":
             article = bom.article
             if not self.app.article_db.empty:
@@ -138,7 +138,7 @@ class TabGeneral(Frame):
         )
         article.category = self.var_category.get()
         bom = Bom(article=article)
-        response = bom.createFinalBom(self.app.bom_db, self.app.items_db)
+        response = bom.createFinalBom(self.app.bom_db)
         if response["status"] == "OK":
             article = bom.article
             if article.article_code in self.app.article_db.article.values:
