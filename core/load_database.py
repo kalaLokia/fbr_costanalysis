@@ -14,6 +14,7 @@ def loadDatabase(root: App) -> None:
     """Load DB from data folder"""
 
     articles_db = pd.DataFrame()
+    art_list = None
 
     APPLOG.append(">>  Looking up for required data...")
 
@@ -49,6 +50,8 @@ def loadDatabase(root: App) -> None:
 
     if not csv_db.empty:
         APPLOG.append("App ready!")
+        if not art_db.empty:
+            art_list = dict(zip(art_db["fathername"], art_db["father"]))
         root.forgetLog()
         if not articles_db.empty:
             articles_db["article"] = articles_db["article"].str.lower()
@@ -56,7 +59,7 @@ def loadDatabase(root: App) -> None:
         else:
             log = "Article's rates missing! Cannot calculate costs accuarately."
             APPLOG.append(log)
-        MainApplication(root, csv_db, articles_db).pack()
+        MainApplication(root, csv_db, articles_db, art_list).pack()
     else:
         log = f">>  Required files missing! Failed to launch app."
         APPLOG.append(log)

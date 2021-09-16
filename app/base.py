@@ -1,6 +1,7 @@
 """
 Main Tkinter UI setup.
 """
+from app.tabs.find_tab import TabFind
 from tkinter import Tk, Frame, StringVar
 from tkinter.ttk import Notebook, Style
 
@@ -24,10 +25,11 @@ class App(Tk):
 
 
 class MainApplication(Frame):
-    def __init__(self, root, bomdb, artdb, *args, **kwargs) -> None:
+    def __init__(self, root, bomdb, artdb, artList, *args, **kwargs) -> None:
         super().__init__(root, *args, **kwargs)
         self.bom_db = bomdb
         self.article_db = artdb
+        self.artList = artList
 
         style = Style(root)
         style.configure("B1.TButton", font=("Helvetica", 12))
@@ -37,8 +39,10 @@ class MainApplication(Frame):
 
         tab_general = TabGeneral(notebook, self)
         tab_advanced = TabAdvanced(notebook, self)
+        tab_find = TabFind(notebook, self)
 
         notebook.add(tab_general, text="General")
         notebook.add(tab_advanced, text="Advanced")
+        notebook.add(tab_find, text="Find")
 
         notebook.pack()
