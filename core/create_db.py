@@ -1,5 +1,5 @@
 """
-Getting actual BOM of an article.
+Creates a new Database
 """
 import re
 import pandas as pd

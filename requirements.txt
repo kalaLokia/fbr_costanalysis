@@ -3,4 +3,4 @@ openpyxl==3.0.7
 XlsxWriter==1.4.3
 pyinstaller==4.4
 Pillow==8.3.1
-ttkwidgets=0.12.1
+ttkwidgets==0.12.1

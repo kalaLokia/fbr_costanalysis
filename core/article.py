@@ -8,7 +8,7 @@ import math
 class Article:
     def __init__(
         self,
-        brand: str = "pride",
+        brand: str = "",
         artno: str = "3290",
         color: str = "bk",
         size: int = 8,
@@ -25,6 +25,7 @@ class Article:
         self.stitch_rate = 0.0
         self.print_rate = 0.0
         self.basic_rate = 0.0
+        self.sap_code = None
 
     @property
     def article_name(self) -> str:
@@ -34,6 +35,8 @@ class Article:
 
     @property
     def get_mc_name(self) -> str:
+        if self.sap_code:
+            return self.sap_code
         prefix = "2-fb"
         return "-".join(
             [prefix, self.artno, self.color, self.category + self.case_type]
@@ -77,7 +80,7 @@ class Article:
             {
                 "g": "gents",
                 "l": "ladies",
-                "x": "giants XL",
+                "x": "giants",
                 "c": "children",
                 "k": "kids",
                 "b": "boys",
@@ -145,10 +148,22 @@ class Article:
         except:
             artno, color, catg = "0000", "bk", "g"
 
-        size = {"g": 8, "l": 7, "x": 12, "c": 12, "k": 8, "r": 3, "b": 3}.get(catg, 8)
-        obj = cls(brand="___", artno=artno, color=color, size=size)
+        size = {"g": 8, "l": 7, "x": 12, "c": 12, "k": 9, "r": 3, "b": 3}.get(catg, 8)
+        obj = cls(brand="", artno=artno, color=color, size=size)
         obj._category = catg
         obj.print_rate = 0 if math.isnan(rates[0]) else rates[0]
         obj.stitch_rate = 0 if math.isnan(rates[1]) else rates[1]
         obj.basic_rate = 0 if math.isnan(rates[2]) else rates[2]
+        return obj
+
+    @classmethod
+    def from_sap_code(cls, sap_code):
+        artno, color = sap_code.split("-")[2:4]
+        catg = sap_code.split("-")[4:][0][0].lower()
+        case_type = "-".join(sap_code.split("-")[4:])[1:]
+        size = {"g": 8, "l": 7, "x": 12, "c": 12, "k": 9, "r": 3, "b": 3}.get(catg, 8)
+
+        obj = cls(brand="", artno=artno, color=color, size=size)
+        obj._category = catg
+        obj.sap_code = sap_code.lower()
         return obj
