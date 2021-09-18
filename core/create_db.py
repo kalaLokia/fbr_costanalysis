@@ -24,7 +24,7 @@ def createBomDB(bom_df, items_df) -> bool:
         right_on="Item No.",
     )
     bom_df = bom_df.merge(
-        items_df[["Item No.", "MRP", "Product Type"]],
+        items_df[["Item No.", "Item MRP", "Product Type"]],
         how="left",
         left_on="Father",
         right_on="Item No.",
@@ -52,6 +52,7 @@ def changeColumnName(name) -> str:
     return {
         "FOREIGN NAME": "childname",
         "INVENTORY UOM": "childuom",
+        "Item MRP": "mrp",
         "Last Purchase Price": "childrate",
     }.get(name, name.lower().replace(" ", ""))
 

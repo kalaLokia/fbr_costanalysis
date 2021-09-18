@@ -20,34 +20,30 @@ def loadDatabase(root: App) -> None:
     art_list = None
 
     APPLOG.append(">>  Looking up for required data...")
-
     root.log_msg.set("\n".join(APPLOG)) if root else print(APPLOG[-1])
 
-    csv_db, log, reload = readFile(DB_DIR)
-    art_db, log, reload = readFile("data/artList.csv")
+    art_db, _ = readFile("data/artList.csv")
+    root.log_msg.set("\n".join(APPLOG)) if root else print(APPLOG[-1])
+
+    csv_db, reload = readFile(DB_DIR)
+    root.log_msg.set("\n".join(APPLOG)) if root else print(APPLOG[-1])
     if reload:
         APPLOG.append(">>  Re-creating database... be patient, it will take a while.")
-
         root.log_msg.set("\n".join(APPLOG)) if root else print(APPLOG[-1])
+
         csv_db, art_db = createAndLoadDB(root)
         if csv_db.empty:
             APPLOG.append(">>  FAILED TO CREATE DATABASE")
-
             root.log_msg.set("\n".join(APPLOG)) if root else print(APPLOG[-1])
             return
         APPLOG.append(">>  A new database successfully created and loaded.")
-    else:
-        APPLOG.append(log)
-
-    root.log_msg.set("\n".join(APPLOG)) if root else print(APPLOG[-1])
 
     APPLOG.append(f">>  Looking up for Articles rate file...")
-
     root.log_msg.set("\n".join(APPLOG)) if root else print(APPLOG[-1])
 
-    articles_db, log, reload = readFile(ARTICLE_RATES_DIR)
-    APPLOG.append(log)
+    articles_db, _ = readFile(ARTICLE_RATES_DIR)
     root.log_msg.set("\n".join(APPLOG)) if root else print(APPLOG[-1])
+
     if not root:
         return csv_db, art_db
 
@@ -60,12 +56,12 @@ def loadDatabase(root: App) -> None:
             articles_db["article"] = articles_db["article"].str.lower()
             articles_db.fillna(0)
         else:
-            log = "Article's rates missing! Cannot calculate costs accuarately."
-            APPLOG.append(log)
+            APPLOG.append(
+                "Article's rates missing! Cannot calculate costs accuarately."
+            )
         MainApplication(root, csv_db, articles_db, art_list).pack()
     else:
-        log = f">>  Required files missing! Failed to launch app."
-        APPLOG.append(log)
+        APPLOG.append(f">>  Required files missing! Failed to launch app.")
         root.log_msg.set("\n".join(APPLOG)) if root else print(APPLOG[-1])
 
 
@@ -75,25 +71,17 @@ def createAndLoadDB(root: App):
     bom_db = pd.DataFrame()
     items_db = pd.DataFrame()
 
-    bom_db, log, reload = readFile(BOM_DATA_DIR)
-    APPLOG.append(log)
-
+    bom_db, _ = readFile(BOM_DATA_DIR)
     root.log_msg.set("\n".join(APPLOG)) if root else print(APPLOG[-1])
 
-    items_db, log, reload = readFile(ITEM_DATA_DIR)
-    APPLOG.append(log)
-
+    items_db, _ = readFile(ITEM_DATA_DIR)
     root.log_msg.set("\n".join(APPLOG)) if root else print(APPLOG[-1])
 
     if items_db.empty and bom_db.empty:
-        log = ">>  ERROR OCCURED WHILE FETCHING DATA"
-        APPLOG.append(log)
-
+        APPLOG.append(">>  ERROR OCCURED WHILE FETCHING DATA")
         root.log_msg.set("\n".join(APPLOG)) if root else print(APPLOG[-1])
         return pd.DataFrame()
-    log = ">>  Creating new database.."
-    APPLOG.append(log)
-
+    APPLOG.append(">>  Creating new database..")
     root.log_msg.set("\n".join(APPLOG)) if root else print(APPLOG[-1])
 
     df, art_df = createBomDB(bom_db, items_db)
@@ -110,7 +98,7 @@ def readFile(dir: str) -> Tuple[pd.DataFrame, str]:
     try:
         if dir.split(".")[-1] == "csv":
             df = pd.read_csv(dir, low_memory=False)
-        elif dir.split(".")[-1] == "xlsx":
+        elif dir.split(".")[-1] in ["xlsx", "xls"]:
             with warnings.catch_warnings(record=True):
                 warnings.simplefilter("always")
                 df = pd.read_excel(dir, engine="openpyxl")
@@ -119,7 +107,8 @@ def readFile(dir: str) -> Tuple[pd.DataFrame, str]:
         log = f'>>  "{dir}" successfully loaded.'
     except FileNotFoundError:
         log = f'>>  NOT FOUND "{dir}".!'
-        reload_db = True
+        if dir == DB_DIR:
+            reload_db = True
     except IOError:
         log = f'>>  "{dir}" Found! Permission denied for reading.'
     except Exception as e:
@@ -127,6 +116,7 @@ def readFile(dir: str) -> Tuple[pd.DataFrame, str]:
         log += "\nBEGINING OF ERROR.............\n"
         log += e
         log += "\n..............ENDING OF ERROR"
-        print(e)
+        # print(e)
 
-    return (df, log, reload_db)
+    APPLOG.append(log)
+    return (df, reload_db)
