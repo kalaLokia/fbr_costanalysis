@@ -3,18 +3,16 @@ Cost analysis of all articles using python tkinter UI, pandas and XlsxWriter.
 
 
 Made with ❤️ by kalaLokia
-<br/>
+
 <br/>
 
 ## Intro
-___
 The application is for calculating cost of an article by extracting the bill of materials of the article from SAP "bom heirarchy" report,
 that contains complete heirarchial representation of every article in the unit. 
-<br/>
+
 <br/>
 
 ## Configuration
-___
 *The configuration file (`.config.ini`) is in the root of the application file, update it accordingly.*
 
 + **EXTERNAL FILES** - This section contains path to required files that is neccessary at the first time app starting to create a database. The supported format for these reports are: "XLSX", "XLS", "CSV-UTF8"
@@ -33,7 +31,7 @@ Just make sure to use underscore "_" in keys instead of space (eg: `wastage_and_
 
 
 All other sections values can be changed not the keys
-<br/>
+
 <br/>
 
 ## Setup
@@ -42,14 +40,14 @@ All other sections values can be changed not the keys
 3. Start the app (`runapp.exe`)
     * App will check for the database. and if it is missing it will create one in directory "data" that requires the files in the step 1.
     * If you ever want to update the database, just delete the `bom.db` file in directory "data" and relanuch the app.
-4. Enjoy
+4. For analyzing the cost of article, that article details has to be in *article_rates* file in the external files section.
+5. For bulk creation of cost analysis report, a file(format: csv/excel) of *article_rates* need to be selected, by default it will show report of all articles in the *article_rates* external file. 
+6. Cost sheet(s) exported will be saved to the directory "files" in the root of the application.
+7. Enjoy
 
-
-<br/>
 <br/>
 
 ## Calculations
-___
 
     Expressions used in the formula:
 
@@ -74,3 +72,5 @@ ___
         > total_cost = ((ba_rate * sell_distr_royalty) + cop) * sales_return 
         > net_margin = (ba_rate - total_cost) / ba_rate
         > net_margin_percent = net_margin * 100 
+
+<br/>
