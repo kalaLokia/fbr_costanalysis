@@ -162,7 +162,8 @@ class Article:
         catg = sap_code.split("-")[4:][0][0].lower()
         case_type = "-".join(sap_code.split("-")[4:])[1:]
         size = {"g": 8, "l": 7, "x": 12, "c": 12, "k": 9, "r": 3, "b": 3}.get(catg, 8)
-
+        if not sap_code.lower().startswith("2-fb"):
+            return cls()
         obj = cls(brand="", artno=artno, color=color, size=size)
         obj._category = catg
         obj.sap_code = sap_code.lower()

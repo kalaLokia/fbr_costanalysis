@@ -1,10 +1,15 @@
 """
 Configuration file setup.
 """
+from app import APPLOG
 import os
 import configparser
 from typing import Tuple
 from . import *
+
+
+DB_CONNECTION = None
+
 
 os.makedirs(os.path.dirname("files/test.txt"), exist_ok=True)
 
@@ -35,6 +40,9 @@ else:
 
     if config.has_option("EXTERNAL FILES", "article_rates"):
         ARTICLE_RATES_DIR = config.get("EXTERNAL FILES", "article_rates")
+
+    if config.has_option("MODE", "DB_MODE"):
+        DB_MOD = config.get("MODE", "DB_MODE").upper()
 
     if config.has_section("FIXED RATES"):
         data = {}

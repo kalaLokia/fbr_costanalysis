@@ -1,0 +1,12 @@
+For run (debug) the application
+>> python runapp.py
+
+
+For creating Windows application
+>> pyinstaller --onefile --noconsole runapp.py
+
+
+Files in this directory has to be in root to workout, this directory is not a python module dir.
+
+
+Miscellaneous has no relation to application, those are just the things I tested out.

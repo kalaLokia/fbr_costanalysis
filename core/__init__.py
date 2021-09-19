@@ -1,9 +1,21 @@
 # DEFAULT CONFIGURATIONS TO USE IF "config.ini" IS NOT ACCESSIBLE
 # OR DOESN'T CONTAINS REQUIRED SECTIONS
+
+
+DB_MOD = "SQL"
+
+SQL_CONN = "sqlite:///data/bom.db"
+SQL_DB_DIR = "data/bom.db"
+SQL_T_BOM = "bom"
+SQL_T_ARTLIST = "artlist"
+
 DB_DIR = "data/db.csv"
+ARTLIST_DIR = "data/artlist.csv"
+
 BOM_DATA_DIR = "data/Bom Hierarchy final.csv"
 ITEM_DATA_DIR = "data/materials.csv"
 ARTICLE_RATES_DIR = "data/articles.csv"
+
 
 ROYALTY = 0.5
 SELLING_DISTRIBUTION = 0.1675

@@ -2,10 +2,24 @@
 Creates a new Database
 """
 import re
+from numpy import empty
 import pandas as pd
+from core.settings import (
+    DB_MOD,
+    DB_DIR,
+    ARTLIST_DIR,
+    SQL_T_ARTLIST,
+    SQL_T_BOM,
+    SQL_CONN,
+)
+from sqlalchemy import create_engine
 
 
-def createBomDB(bom_df, items_df) -> bool:
+def createBomDB(bom_df: pd.DataFrame, items_df: pd.DataFrame) -> tuple:
+    """Save DB to directory data, either SQLITE or CSV format."""
+    if bom_df.empty or items_df.empty:
+        return pd.DataFrame(), pd.DataFrame()
+
     unwanted_columns = [
         # "Father Name",
         "Father No of pairs",
@@ -41,14 +55,43 @@ def createBomDB(bom_df, items_df) -> bool:
     bom_df["childqty"] = pd.to_numeric(bom_df["childqty"], errors="coerce")
     bom_df["childrate"] = pd.to_numeric(bom_df["childrate"], errors="coerce")
 
-    bom_df.to_csv("data/db.csv", index=False)
+    artlist_df = create_article_list(bom_df)
 
-    art_df = create_article_list(bom_df)
+    if DB_MOD == "CSV":
+        bom_df.to_csv(DB_DIR, index=False)
+        artlist_df.to_csv(ARTLIST_DIR, index=False)
+    else:
+        engine = create_engine(SQL_CONN, echo=False)
+        bom_df.to_sql(SQL_T_BOM, con=engine, if_exists="replace", index=False)
+        artlist_df.to_sql(SQL_T_ARTLIST, con=engine, if_exists="replace", index=False)
 
-    return bom_df, art_df
+        engine.dispose()
+
+    return bom_df, artlist_df
+
+
+def create_article_list(db):
+    """Creates a dataframe with article sapcode and description for Find tab.
+
+    This helps to create a key-value pair of article's main parent description and sapcode,
+    Only process first match case type (sorted by case type)
+    """
+    df = db[db["father"].str.startswith("2-FB-")][["father", "fathername"]].copy()
+    df["art"] = (
+        df.father.str.split("-").str[2:4].str.join("-")
+        + "-"
+        + df.father.str.split("-").str[4:].str[0].str[0]
+    )
+    df["case"] = df.father.str.split("-").str[4:].str.join("-").str[1:]
+    df.sort_values("case", inplace=True)
+    df.drop_duplicates(subset=["art"], ignore_index=True, inplace=True)
+    df["fathername"] = df.fathername.str.replace("-", " ")
+
+    return df
 
 
 def changeColumnName(name) -> str:
+    """For changing column names of the dataframe"""
     return {
         "FOREIGN NAME": "childname",
         "INVENTORY UOM": "childuom",
@@ -97,6 +140,7 @@ def getApplication(head, process) -> str:
 
 
 def getBrandName(process_no, item):
+    """All SAP item description is not valid."""
     if process_no == 2 or process_no == 1:
         brand = item.split("-")[1].title()
         if has_digits(brand) or brand == "Fortune Kinaloor":
@@ -109,18 +153,3 @@ def getBrandName(process_no, item):
 
 def has_digits(inputString):
     return bool(re.search(r"\d", inputString))
-
-
-def create_article_list(db):
-    df = db[db["father"].str.startswith("2-FB-")][["father", "fathername"]].copy()
-    df["art"] = (
-        df.father.str.split("-").str[2:4].str.join("-")
-        + "-"
-        + df.father.str.split("-").str[4:].str[0].str[0]
-    )
-    df["case"] = df.father.str.split("-").str[4:].str.join("-").str[1:]
-    df.sort_values("case", inplace=True)
-    df.drop_duplicates(subset=["art"], ignore_index=True, inplace=True)
-    df.to_csv("data/artList.csv", index=False)
-
-    return df

@@ -1,7 +1,9 @@
 """
 Find article by searching.
 """
-from tkinter import Frame, StringVar
+import re
+
+from tkinter import Frame, StringVar, IntVar
 
 from app import APPLOG
 from app.frames.advanced_frames import ButtonAdvancedFrame
@@ -24,6 +26,8 @@ class TabFind(Frame):
         self.art_list = self.app.artList
         self.art_description = tuple(self.art_list.keys())
 
+        self.checkVar = IntVar()
+        self.checkVar.set(1)
         self.log_msg = StringVar(self)
         self.var_pc = StringVar(self)
         self.var_sc = StringVar(self)
@@ -80,8 +84,14 @@ class TabFind(Frame):
         else:
             data = []
             for item in self.art_description:
-                if value in item.lower():
-                    data.append(item)
+                if self.checkVar.get():
+                    if value in item.lower():
+                        data.append(item)
+                else:
+                    all_re = ".*"
+                    re_pattern = all_re + all_re.join([x for x in value]) + all_re
+                    if re.search(re_pattern, item.lower()):
+                        data.append(item)
 
         # update data in listBox
         self.frame1.listbox_update(data)
