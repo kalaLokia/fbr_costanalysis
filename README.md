@@ -74,3 +74,6 @@ All other sections values can be changed not the keys
         > net_margin_percent = net_margin * 100 
 
 <br/>
+
+## Demo
+![First Look at App](https://media0.giphy.com/media/9QzQC9RsPrb9KR1g2F/giphy.gif)
