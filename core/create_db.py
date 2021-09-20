@@ -11,6 +11,7 @@ from core.settings import (
     SQL_T_ARTLIST,
     SQL_T_BOM,
     SQL_CONN,
+    APPLOG,
 )
 from sqlalchemy import create_engine
 
@@ -28,26 +29,33 @@ def createBomDB(bom_df: pd.DataFrame, items_df: pd.DataFrame) -> tuple:
         "Item No._x",
         "Item No._y",
     ]
-    bom_df["brand"] = bom_df.apply(
-        lambda x: getBrandName(x.get("Process Order"), x.get("Father Name")), axis=1
-    )
-    bom_df = bom_df.merge(
-        items_df[["Item No.", "FOREIGN NAME", "INVENTORY UOM", "Last Purchase Price"]],
-        how="left",
-        left_on="Child",
-        right_on="Item No.",
-    )
-    bom_df = bom_df.merge(
-        items_df[["Item No.", "Item MRP", "Product Type"]],
-        how="left",
-        left_on="Father",
-        right_on="Item No.",
-    )
-    bom_df.drop(unwanted_columns, axis=1, inplace=True, errors="ignore")
-    bom_df.columns = [changeColumnName(name) for name in bom_df.columns.values]
-    bom_df["childtype"] = bom_df.apply(
-        lambda x: getMaterialType(x.father, x.child), axis=1
-    )
+    try:
+        bom_df["brand"] = bom_df.apply(
+            lambda x: getBrandName(x.get("Process Order"), x.get("Father Name")), axis=1
+        )
+        bom_df = bom_df.merge(
+            items_df[
+                ["Item No.", "FOREIGN NAME", "INVENTORY UOM", "Last Purchase Price"]
+            ],
+            how="left",
+            left_on="Child",
+            right_on="Item No.",
+        )
+        bom_df = bom_df.merge(
+            items_df[["Item No.", "Item MRP", "Product Type"]],
+            how="left",
+            left_on="Father",
+            right_on="Item No.",
+        )
+        bom_df.drop(unwanted_columns, axis=1, inplace=True, errors="ignore")
+        bom_df.columns = [changeColumnName(name) for name in bom_df.columns.values]
+        bom_df["childtype"] = bom_df.apply(
+            lambda x: getMaterialType(x.father, x.child), axis=1
+        )
+    except Exception as e:
+        APPLOG.append(f">>  ERROR: {e}")
+        return pd.DataFrame(), pd.DataFrame()
+
     # MC, SC
     bom_df["application"] = bom_df.apply(
         lambda x: getApplication(x.father, x.processorder), axis=1

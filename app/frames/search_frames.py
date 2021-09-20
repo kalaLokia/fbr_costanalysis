@@ -25,7 +25,7 @@ class SearchBoxFrame(Frame):
         ).grid(row=0, column=1)
 
         self.listBox = Listbox(
-            self, width=50, height=12, font=("Calibri 11"), bg="#c9fffc"
+            self, width=50, height=10, font=("Calibri 11"), bg="#c9fffc"
         )
         self.listBox.grid(row=1, column=0, columnspan=2, pady=10)
         # self.listBox.bind("<Double-Button-1>", tab.on_select)

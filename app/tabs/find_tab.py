@@ -45,7 +45,7 @@ class TabFind(Frame):
 
         self.frame1.pack()
         # self.frame2.pack(pady=20)
-        self.frame3.pack(pady=20)
+        self.frame3.pack(pady=10)
         # self.frame4.pack()
 
     @property
@@ -58,7 +58,7 @@ class TabFind(Frame):
     def hide_info_frame(self) -> None:
         self.frame2.pack_forget()
         self.frame4.pack_forget()
-        self.frame3.pack(pady=25)
+        self.frame3.pack(pady=5)
 
     def show_info_frame(self, netm) -> None:
         self.frame3.pack_forget()
