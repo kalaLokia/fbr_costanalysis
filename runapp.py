@@ -18,7 +18,7 @@ if __name__ == "__main__":
     root = App()
     root.title("Fortune Br - Analyse Article")
     root.geometry("400x480")
-    root.iconbitmap("miscellaneous/iconb.ico")
+    # root.iconbitmap("icon.ico")
     root.resizable(0, 0)
 
     thread = threading.Thread(target=loadDatabase, args=(root,))

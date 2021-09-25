@@ -272,7 +272,7 @@ class ExcelReporting:
         start = self.last_row + 1
         for i, (key, value) in enumerate(FIXED_RATES.items()):
             item = "{0}-{1}".format(
-                i, key.replace("_", " ").replace("and", "&").title()
+                i + 1, key.replace("_", " ").replace("and", "&").title()
             )
             self.worksheet.write(self.last_row, 3, item, fmt_L)
             self.worksheet.write(self.last_row, 6, value, fmt_R)

@@ -2,7 +2,7 @@
 Creates a new Database
 """
 import re
-from numpy import empty
+from app import APPLOG
 import pandas as pd
 from core.settings import (
     DB_MOD,
@@ -11,7 +11,6 @@ from core.settings import (
     SQL_T_ARTLIST,
     SQL_T_BOM,
     SQL_CONN,
-    APPLOG,
 )
 from sqlalchemy import create_engine
 
