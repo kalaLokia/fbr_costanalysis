@@ -142,6 +142,7 @@ class Bom:
             .str.lower()
             .str.contains(f"[gxlbrcki](?:{self.article.get_str_size})?$", regex=True)
             | df["child"].str.lower().str.startswith("4-pux-")
+            | (df["child"].str.lower() == "4-cca-ang01")
         )
         return df[condition1 & condition2]["child"].unique()
 
