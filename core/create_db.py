@@ -115,6 +115,7 @@ def getMaterialType(head: str, tail: str) -> str:
         "nl": "Synthetic Leather",
         "co": "Component",
         "pu": "PU Mix",
+        "km": "Component",
     }
     default_material_types = {
         "fb": "Packing Material",
@@ -123,7 +124,7 @@ def getMaterialType(head: str, tail: str) -> str:
     }
     try:
         value = int(tail[0])
-        if value > 4 or tail[:5].lower() == "4-pux":
+        if value > 4 or tail[:5].lower() == "4-pux" or item == "km":
             default_type = default_material_types.get(head_item, "Other Material")
             return material_types.get(item, default_type)
         else:
