@@ -1,3 +1,4 @@
+Checkout more advanced version of the same concept made in Qt @[fbr_bom_app](https://github.com/kalaLokia/fbr_bom_app)
 # Cost Analysis
 Cost analysis of all articles using python tkinter UI, pandas and XlsxWriter.
 
